@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.0.xsd">
+
+	<!--目标对象 -->
+	<bean id="doctor" class="demo2aop.step3.Doctor" />
+	<bean id="sports" class="demo2aop.step3.Sportsman">
+	    <constructor-arg value="M.Jordan" />
+	</bean>
+	
+	<!-- advice通知，切面 -->
+	<bean id="trackadvice" class="demo2aop.step3.Track1"/>
+	
+	<!-- 配置代理，将通知应用到目标对象中 -->
+	<bean id="proxyD" class="org.springframework.aop.framework.ProxyFactoryBean">
+		<!-- 指定代理接口名称 -->
+		<property name="proxyInterfaces">
+			<value>demo2aop.step3.iPerson</value>
+		</property>
+		<!-- 指定接口实现类对象 -->
+		<property name="target" ref="doctor"/>
+		<!-- 指定拦截功能 -->
+		<property name="interceptorNames">
+			<list>
+				<value>trackadvice</value>
+			</list>
+		</property>
+	</bean>
+	
+	<bean id="proxyS" class="org.springframework.aop.framework.ProxyFactoryBean">
+		<property name="proxyInterfaces">
+			<value>demo2aop.step3.iPerson</value>
+		</property>
+		<property name="target" ref="sports"/>
+		<property name="interceptorNames">
+			<list>
+				<value>trackadvice</value>
+			</list>
+		</property>
+	</bean>
+	
+	
+	<!-- 使用抽象代理（abstract属性），实现批量配置 -->
+	<bean id="proxyBase" class="org.springframework.aop.framework.ProxyFactoryBean"
+	    abstract="true">
+	    <property name="proxyInterfaces" value="demo2aop.step3.iPerson"/>
+		<property name="interceptorNames">
+			<list>
+				<value>trackadvice</value>
+			</list>
+		</property>	    
+	</bean>
+	<bean id="pDoctor" parent="proxyBase">
+		<property name="target" ref="doctor"/>
+	</bean>
+	<bean id="pSports" parent="proxyBase">
+		<property name="target" ref="sports"/>
+	</bean>
+	
+		
+</beans>
