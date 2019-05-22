@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.0.xsd">
+
+	<!-- 被通知Bean，诗歌表演者 -->
+	<bean id="juggTarget" class="sia2.idol.Juggler" />
+	<bean id="dukeTarget" class="sia2.idol.PoeticJuggler" >
+		<constructor-arg value="12" />
+	</bean>
+	<bean id="stevieTarget" class="sia2.idol.PoeticJuggler" >
+		<constructor-arg value="10" />
+	</bean>
+	<bean id="audience" class="sia2.idol.Audience" />
+
+	
+	<!-- 观众通知, 实现了MethodInterceptor -->
+	<bean id="audienceAdvice" class="sia2.idol.AudienceAroundAdvice">
+		<property name="audience" ref="audience" />
+	</bean>
+
+	<!-- 定义切点，使用正则表达式，匹配被通知类中的方法名 -->
+	<bean id="audiencePointcut"
+		class="org.springframework.aop.support.JdkRegexpMethodPointcut">
+		<property name="pattern" value=".*perform" />
+	</bean>
+		
+	<!-- 观众通知者 -->
+	<bean id="audienceAdvisor"
+		class="org.springframework.aop.support.DefaultPointcutAdvisor">
+		<property name="advice" ref="audienceAdvice" />
+		<property name="pointcut" ref="audiencePointcut" />
+	</bean>
+
+	<!-- 联合切点与通知者 -->
+	<bean id="audienceAdvisor2"
+		class="org.springframework.aop.support.RegexpMethodPointcutAdvisor">
+		<property name="advice" ref="audienceAdvice" />
+		<property name="pattern" value=".*perform" />
+	</bean>
+	
+	<!-- 配置代理，将通知应用到目标对象中 -->
+	<bean id="proxyDuke" class="org.springframework.aop.framework.ProxyFactoryBean">
+		<!-- 指定接口实现类对象 -->
+		<property name="target" ref="dukeTarget"/>
+		<!-- 指定拦截功能 -->
+		<property name="interceptorNames" value="audienceAdvisor" />
+		<!-- 指定代理接口名称 -->
+		<property name="proxyInterfaces" value="sia2.idol.Performer"/>
+	</bean>
+	
+	<!-- 配置其他代理，重复每一个配置项 -->
+	<!-- 
+	<bean id="proxyStevie" class="org.springframework.aop.framework.ProxyFactoryBean">
+		<property name="target" ref="stevieTarget"/>
+		<property name="interceptorNames" value="audienceAdvisor" />
+		<property name="proxyInterfaces" value="sia2.idol.Performer"/>
+	</bean>
+	 -->
+	<!-- 设置抽象代理，通过实例化不同代理实现批量配置 -->
+	<bean id="proxyBase" class="org.springframework.aop.framework.ProxyFactoryBean"
+	    abstract="true">
+	    <property name="proxyInterfaces" value="sia2.idol.Performer"/>
+		<property name="interceptorNames" value="audienceAdvisor" />	    
+	</bean>
+	<bean id="pDuke" parent="proxyBase">
+		<property name="target" ref="dukeTarget"/>
+	</bean>
+	<bean id="pStevie" parent="proxyBase">
+		<property name="target" ref="stevieTarget"/>
+	</bean>
+	
+</beans>

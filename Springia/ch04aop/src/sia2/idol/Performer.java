@@ -1,0 +1,6 @@
+package sia2.idol;
+
+//±íÑÝ½Ó¿Ú
+public interface Performer {
+    public void perform();
+}
