@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.0.xsd">
+
+
+	<!-- 定义乐器，被DI使用的对象 -->
+	<bean id="harmonica" class="sia2.beanset.Harmonica" />
+	<bean id="cymbal" class="sia2.beanset.Cymbal" />
+	<bean id="guitar" class="sia2.beanset.Guitar" />
+
+	<!-- 定义一个人的乐队，同时演奏吉他、口琴和打击，乐器集合 -->
+	<bean id="hank" class="sia2.beanset.OneManBand1">
+		<property name="instruments">
+			<!-- 列表：可重复元素 -->
+			<list>
+				<ref bean="guitar" />
+				<ref bean="harmonica" />
+				<ref bean="cymbal" />
+				<ref bean="cymbal" />
+			</list>
+			<!-- 集合：不重复元素
+				<set>
+				</set>
+			-->
+		</property>
+	</bean>
+	
+	<!-- 定义一个人的乐队，同时演奏吉他、口琴和打击，乐器Map-->
+	<bean id="hankmap" class="sia2.beanset.OneManBand2">
+		<property name="instruments">
+			<!-- Map：由键值对构成元素 -->
+			<map>
+		        <entry key="GUITAR" value-ref="guitar" />
+		        <entry key="CYMBAL" value-ref="cymbal" />
+		        <entry key="HARMONICA" value-ref="harmonica" />
+		    </map>
+		</property>
+	</bean>
+	
+	<!-- 定义一个人的乐队，同时演奏吉他、口琴和打击，乐器Map-->
+	<bean id="hankprop" class="sia2.beanset.OneManBand3">
+		<property name="instruments">
+			<!-- Properties：由键值对构成元素 -->
+		    <props>
+		        <prop key="GUITAR">STRUM! STRUM! STRUM!</prop>
+		        <prop key="CYMBAL">CRASH CRASH CRASH</prop>
+		        <prop key="HARMONICA">HUM HUM HUM</prop>
+		    </props>
+		</property>
+	</bean>
+	
+</beans>

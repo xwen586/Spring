@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.0.xsd">
+
+	<!-- 定义一个叫kenny的演奏家 -->
+	<bean id="kenny" class="sia2.beandi.Instrumentalist">
+		<!-- 注入属性（参数、类） -->
+		<property name="song" value="Jingle Bells"/>
+		<property name="instrument" ref="saxophone"/>
+	</bean>
+	<bean id="kengy" class="sia2.beandi.Instrumentalist">
+		<property name="song" value="Jingle Bells"/>
+		<property name="instrument" ref="piano"/>
+	</bean>
+	
+	<!-- 定义乐器，被DI使用的对象 -->
+	<bean id="saxophone" class="sia2.beandi.Saxophone" />
+	<bean id="piano" class="sia2.beandi.Piano" />
+    
+</beans>
