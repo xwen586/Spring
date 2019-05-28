@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd" -->
+
+<hibernate-mapping>
+	<!--  类和表的映射. 使用class元素定义一个持久化类 -->
+    <class name="demo11.Customer" table="Customer">
+    	<id name="id" column="id" type="int">
+    		<!-- 值native表示会根据数据库来创建不同的主键生成策略 -->
+    		<generator class="native"/>
+        </id>
+	    <!-- 为类定义一个持久化的javaBean风格的属性 -->
+	    <property name="name" column="name" type="string" />
+	    <property name="age" column="age" type="int" />
+	    <property name="phone" column="phone" type="string" />
+    </class>
+</hibernate-mapping>
