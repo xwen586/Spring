@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-2.5.xsd">
+
+    <bean name="dsConfig" class="org.springframework.jdbc.datasource.DriverManagerDataSource" >
+	    <property name="driverClassName" value="org.sqlite.JDBC" />
+	    <property name="url" value="jdbc:sqlite:bin/sample.db" />
+	</bean>
+
+	<bean id="sqlMapClient" class="org.springframework.orm.ibatis.SqlMapClientFactoryBean">  
+		<property name="dataSource" ref="dsConfig" />
+	    <!-- 此处应注入ibatis配置文件，而非sqlMap文件，否则会出现“there is no statement.....异常” -->  
+	    <property name="configLocation">  
+	        <value>demo01/sqlMapConfig.xml</value>  
+	    </property>  
+	</bean>
+
+	<!-- SqlMapClientTemplate包裹SqlMapClient -->
+	<bean id="sqlMapClientTmpl" class="org.springframework.orm.ibatis.SqlMapClientTemplate">  
+		<property name="sqlMapClient" ref="sqlMapClient" />
+	</bean>
+
+	<!-- 直接使用SqlMapClient -->
+	<bean id="customerDao" class="demo01.CustomerDao">  
+		<property name="sqlMapClient" ref="sqlMapClient" />
+	</bean>
+
+	<!-- 使用SqlMapClientTemplate -->
+	<bean id="customerDaoTmpl" class="demo01.CustomerDaoTmpl">  
+		<property name="sqlMapClientTemplate" ref="sqlMapClientTmpl" />
+	</bean>
+	
+	<!-- 使用基于iBatis的DAO支持类 -->
+	<bean id="customerDaoSupp" class="demo01.CustomerDaoSupp">  
+		<property name="sqlMapClient" ref="sqlMapClient" />
+	</bean>
+	
+</beans>
