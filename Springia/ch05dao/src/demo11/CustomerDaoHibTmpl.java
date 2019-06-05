@@ -24,6 +24,11 @@ public class CustomerDaoHibTmpl {
         this.hibernateTemplate.update(c);
     }
 	
+	//ID字段为null时新增；不是null时修改
+	public void saveOrUpdate(Customer c) {
+        this.hibernateTemplate.saveOrUpdate(c);
+    }
+
 	//查询
 	public Customer getCustomerById(Integer id) {
 		return (Customer)this.hibernateTemplate.load(Customer.class, id);
