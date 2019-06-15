@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd">
+
+	<!-- 定义了接收到的message与endpoint之间的mapping关系 -->
+	<bean id="payloadMapping"
+		class="org.springframework.ws.server.endpoint.mapping.PayloadRootQNameEndpointMapping">
+		<property name="endpointMap">
+			<map>
+				<entry
+					key="{http://www.example.org/hello/}serviceRequest"
+					value-ref="helloEndpoint" />
+			</map>
+		</property>
+	</bean>
+
+	<!--使用预定义wsdl. SimpleWsdl11Definition to load a pre-defined WSDL. -->
+	<bean id="hello" class="org.springframework.ws.wsdl.wsdl11.SimpleWsdl11Definition">
+		<property name="wsdl" value="/WEB-INF/hello.wsdl" />
+	</bean>
+
+	<bean id="helloEndpoint" class="server.HelloEndPoint">
+        <property name="helloService" ref="helloService" />
+    </bean>
+
+    <bean id="helloService" class="server.HelloServiceImpl" />
+
+</beans>

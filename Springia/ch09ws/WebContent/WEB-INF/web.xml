@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns="http://java.sun.com/xml/ns/javaee"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
+	id="WebApp_ID" version="3.0">
+	
+    <display-name>ch09ws</display-name>
+    
+    <!-- begin Spring配置 -->
+	<context-param>
+	    <param-name>contextConfigLocation</param-name>
+	    <param-value>/WEB-INF/spring-ws-servlet.xml</param-value>
+	</context-param>
+	
+	<listener>
+        <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+    </listener>
+    <!-- 负责处理由 JavaBean Introspector 功能而引起的缓存泄露 -->
+    <listener>
+        <listener-class>org.springframework.web.util.IntrospectorCleanupListener</listener-class>
+    </listener>
+    
+    <!-- 使用端点映射  -->
+    <servlet>
+        <servlet-name>spring-ws</servlet-name>
+        <servlet-class>org.springframework.ws.transport.http.MessageDispatcherServlet</servlet-class>
+	    <init-param>
+	      <!-- MessageDispatcherServlet重写预定义wsdl，以匹配请求的URL -->
+	      <param-name>transformWsdlLocations</param-name>
+	      <param-value>false</param-value>
+	    </init-param>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>spring-ws</servlet-name>
+        <url-pattern>/*</url-pattern>
+    </servlet-mapping>
+    
+</web-app>
