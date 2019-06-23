@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:beans="http://www.springframework.org/schema/beans"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+	 http://www.springframework.org/schema/beans/spring-beans-2.5.xsd">
+
+	<bean id="helloSvc" class="server.HelloHttpSvc" />
+
+	<!-- 使用Spring的Httpinvoker做代理. 注:name中不要带"/" -->
+	<bean name="helloHttp"
+		class="org.springframework.remoting.httpinvoker.HttpInvokerServiceExporter">
+		<!-- service引用具体的实现实体Bean -->
+		<property name="service" ref="helloSvc" />
+		<property name="serviceInterface" value="server.IHello" />
+	</bean>
+
+	<!-- 这个Bean映射了当URL是/userService时，处理器为userServiceInvoker -->
+	<bean
+		class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
+		<property name="mappings">
+			<props>
+				<prop key="/helloService">helloHttp</prop>
+			</props>
+		</property>
+	</bean>
+
+</beans>

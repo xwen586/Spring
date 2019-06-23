@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd">
+
+	<bean id="rcvConnectionFactory"
+		class="org.apache.activemq.ActiveMQConnectionFactory">
+		<property name="brokerURL" value="tcp://localhost:61616" />
+	</bean>
+
+	<!--声明消息队列 Queue-->
+	<bean id="rcvDestination"
+		class="org.apache.activemq.command.ActiveMQQueue">
+		<constructor-arg index="0" value="myMdpQueue" />
+	</bean>
+
+	<!-- bean id="jmsTemplate" class="org.springframework.jms.core.JmsTemplate">
+		<property name="connectionFactory" ref="rcvConnectionFactory" />
+	    <property name="defaultDestination" ref="rcvDestination" />
+	</bean>
+	-->
+
+	<bean id="rcvmdp" class="d4mdp.SimpMdpListener" />
+
+	<!-- 简单消息监听容器, 将rcvmdp注入到容器中使其为一个MDP
+	<bean id="jmsSimpleContainer" class="org.springframework.jms.listener.SimpleMessageListenerContainer">  
+	    <property name="connectionFactory" ref="rcvConnectionFactory"/>  
+	    <property name="destination" ref="rcvDestination"/>  
+	    <property name="messageListener" ref="rcvmdp" />  
+	</bean> -->
+	
+	<!-- 带有事务性监听容器 message listener container	-->
+	<bean id="jmsTranContainer" class="org.springframework.jms.listener.DefaultMessageListenerContainer">
+	    <property name="connectionFactory" ref="rcvConnectionFactory"/>
+	    <property name="destination" ref="rcvDestination"/>
+	    <property name="messageListener" ref="rcvmdp" />
+	    <!-- transactionManager为可选，没有注入时，降级为SimpleMessageListenerContainer -->
+	    <property name="transactionManager" ref="jmsTransactionManager" />
+	</bean>
+
+	<bean id="jmsTransactionManager" 
+	  class="org.springframework.jms.connection.JmsTransactionManager">
+		<property name="connectionFactory" ref="rcvConnectionFactory" />
+	</bean>
+  
+</beans>

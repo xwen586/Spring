@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd">
+
+	<bean id="rcvConnectionFactory"
+		class="org.apache.activemq.ActiveMQConnectionFactory">
+		<property name="brokerURL" value="tcp://localhost:61616" />
+	</bean>
+
+	<!--声明消息队列 Queue-->
+	<bean id="rcvDestination"
+		class="org.apache.activemq.command.ActiveMQQueue">
+		<constructor-arg index="0" value="myPojoQueue" />
+	</bean>
+	<bean id="rcvPurePojoDest"
+		class="org.apache.activemq.command.ActiveMQQueue">
+		<constructor-arg index="0" value="purePojo" />
+	</bean>
+	
+	<bean id="rcvmdp" class="d5pojo.StudentMdp" />
+	<bean id="rcvPureMdp" class="d5pojo.StudentMdp2" />
+	
+	
+	<!-- 简单消息监听容器, 将rcvmdp注入到容器中使其为一个MDP-->
+	<bean id="jmsSimpleContainer"
+	    class="org.springframework.jms.listener.SimpleMessageListenerContainer">  
+	    <property name="connectionFactory" ref="rcvConnectionFactory"/>  
+	    <property name="destination" ref="rcvDestination"/>  
+	    <property name="messageListener" ref="rcvmdp" />  
+	</bean>
+
+	<!-- 简单消息监听容器, 将纯Pojo的rcvpuremdp注入到容器中 -->
+	<bean id="jmsPurePojo"
+	    class="org.springframework.jms.listener.SimpleMessageListenerContainer">  
+	    <property name="connectionFactory" ref="rcvConnectionFactory"/>  
+	    <property name="destination" ref="rcvPurePojoDest"/>  
+	    <property name="messageListener" ref="purePojoMdp" />  
+	</bean>
+	
+	<!-- Pojo监听处理适配器 -->
+	<bean id="purePojoMdp"
+	    class="org.springframework.jms.listener.adapter.MessageListenerAdapter">  
+	    <property name="delegate" ref="rcvPureMdp"/>  
+	    <property name="defaultListenerMethod" value="processStudentInfo"/>
+	    <!-- 注入消息转换器 -->
+	    <property name="messageConverter" ref="studentConverter" />
+	</bean>
+	
+	<!-- 定义消息对象转换器，注入到适配器中 -->
+	<bean id="studentConverter" class="d5pojo.StudentMessageConverter" />
+      
+</beans>

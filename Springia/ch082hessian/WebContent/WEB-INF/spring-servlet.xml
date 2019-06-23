@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-2.5.xsd">
+
+	<!-- 接口的具体实现类 -->
+    <bean id="helloSvc1" class="server.HelloHessianSvc" />
+    <bean id="helloSvc2" class="server.HelloBurlapSvc" />
+	
+    <!-- 使用Spring的HessianServie做代理. 注:name中要带"/" -->
+    <bean name="/helloHess" class="org.springframework.remoting.caucho.HessianServiceExporter">    
+        <!-- service引用具体的实现实体Bean-->
+        <property name="service" ref="helloSvc1" />
+        <property name="serviceInterface" value="server.IHello" />
+    </bean>
+    
+    <bean name="/helloBurlap" class="org.springframework.remoting.caucho.BurlapServiceExporter">    
+        <!-- service引用具体的实现实体Bean-->
+        <property name="service" ref="helloSvc2" />
+        <property name="serviceInterface" value="server.IHello" />
+    </bean>
+
+</beans>

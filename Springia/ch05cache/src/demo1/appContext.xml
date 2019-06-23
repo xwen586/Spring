@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:cache="http://www.springframework.org/schema/cache"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/cache http://www.springframework.org/schema/cache/spring-cache-4.3.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.3.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.3.xsd">
+
+    <!-- 基于注解的缓存实现 -->
+    <!-- context:component-scan base-package="demo1" /-->
+    
+    <!-- 启用缓存注解功能 -->
+    <cache:annotation-driven cache-manager="ehcacheManager"/>
+    <!-- 支持ehcache的包在context-support.jar中 -->
+    <bean id="ehcacheManagerFactory"
+        class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean">
+        <!-- 导入ehcache缓存配置文件 -->
+        <property name="configLocation" value="classpath:demo1/ehcache.xml" />
+    </bean>
+    
+    <bean id="ehcacheManager" class="org.springframework.cache.ehcache.EhCacheCacheManager">
+         <property name="cacheManager" ref="ehcacheManagerFactory" />
+    </bean>
+    
+    <bean id="mySvc" class="demo1.myService">
+    </bean>
+    
+</beans>

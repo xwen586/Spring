@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd">
+
+	<!-- 客户端Hessian代理工厂Bean -->  
+    <bean id="hello" class="org.springframework.remoting.httpinvoker.HttpInvokerProxyFactoryBean">
+    	<!-- 请求代理Servlet路径  -->  
+        <property name="serviceUrl">  
+            <value>http://127.0.0.1:8080/ch083http/helloService</value>  
+        </property>  
+        <!-- 接口定义 -->  
+        <property name="serviceInterface" value="client.IHelloClient" />    
+    </bean>
+
+</beans>

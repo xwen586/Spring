@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.0.xsd">
+
+	<aop:aspectj-autoproxy />
+	
+	<!-- 定义Aspect -->
+	<bean id="audience" class="sia2.idol2.Audience" />
+
+	<!-- 被通知Bean，诗歌表演者 -->
+	<bean id="dukeTarget" class="sia2.idol2.PoeticJuggler" >
+		<constructor-arg value="12" />
+	</bean>
+	<bean id="stevieTarget" class="sia2.idol2.PoeticJuggler" >
+		<constructor-arg value="10" />
+	</bean>
+
+
+</beans>

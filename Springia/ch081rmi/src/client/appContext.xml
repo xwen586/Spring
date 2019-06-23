@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd">
+
+	<!--bean id为程序调用时输入的第一参数-->    
+    <bean id="hello" class="org.springframework.remoting.rmi.RmiProxyFactoryBean"> 
+        <!--ip和端口为server的ip和刚才注册的端口号,服务名为设置的serviceName-->
+        <property name="serviceUrl" value="rmi://localhost:9090/helloWord"/>
+        <!--调用的接口-->
+        <property name="serviceInterface" value="client.IRmiServer"/>
+        <!-- 当连接失败时是否刷新远程调用stub -->
+        <property name="refreshStubOnConnectFailure" value="true"/>
+    </bean>
+    
+    <bean id="printDate" class="org.springframework.remoting.rmi.RmiProxyFactoryBean"> 
+        <property name="serviceUrl" value="rmi://localhost:9090/realTime"/>
+        <property name="serviceInterface" value="client.IRmiServer"/>
+        <property name="refreshStubOnConnectFailure" value="true"/>
+    </bean>
+    
+</beans>

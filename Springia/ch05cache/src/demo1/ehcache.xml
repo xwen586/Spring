@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ehcache xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:noNamespaceSchemaLocation="http://ehcache.org/ehcache.xsd">
+
+    <!--磁盘存储：用来指定缓存在磁盘上的存储目录。
+            可以使用JavaVM环境变量(user.home, user.dir, java.io.tmpdir)-->
+    <diskStore path="java.io.tmpdir/myehcache.cach"/>
+
+    <!-- 默认缓存 -->
+    <defaultCache
+        maxElementsInMemory="1000"
+        eternal="false"
+        timeToIdleSeconds="120"
+        timeToLiveSeconds="120"
+        overflowToDisk="false"
+        memoryStoreEvictionPolicy="LFU"/>
+
+    <!-- 菜单缓存 -->	
+    <cache name="myCache" 
+        maxElementsInMemory="1000" 
+        eternal="false"
+        timeToIdleSeconds="120"
+        timeToLiveSeconds="120"
+        overflowToDisk="false" 
+        memoryStoreEvictionPolicy="LRU"/>
+
+</ehcache>

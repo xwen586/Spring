@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:beans="http://www.springframework.org/schema/beans"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+	 http://www.springframework.org/schema/beans/spring-beans-2.5.xsd">
+
+	<bean id="helloSvc" class="xfire.server.HelloWebSvc" />
+
+	<!-- 引入xfire配置，否则报错: No bean named 'xfire.serviceFactory' is defined -->
+    <import resource="classpath:org/codehaus/xfire/spring/xfire.xml"/>
+
+	<!-- 使用xfire的Spring代理. -->
+	<bean name="helloWS" class="org.codehaus.xfire.spring.remoting.XFireExporter">
+		<property name="serviceFactory" ref="xfire.serviceFactory" />
+		<property name="xfire" ref="xfire" />
+		<!-- service引用具体的实现实体Bean -->
+		<property name="serviceBean" ref="helloSvc" />
+		<property name="serviceClass" value="xfire.server.IHello" />		
+	</bean>
+
+	<!-- 映射URL -->
+	<bean id="myUrlMapping"
+		class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
+		<property name="mappings">
+			<props>
+				<prop key="/helloService">helloWS</prop>
+			</props>
+		</property>
+	</bean>
+
+</beans>

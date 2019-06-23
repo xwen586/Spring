@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.0.xsd">
+
+
+	<!-- 被通知Bean，歌曲表演者 -->
+	<bean id="bo" class="sia2.idol3.Singer">
+		<constructor-arg value="Bo Bice" />
+		<property name="song" value="Sweet Home Alabama" />
+	</bean>
+	<bean id="william" class="sia2.idol3.Singer">
+		<constructor-arg value="William Hung" index="0" />
+	</bean>
+	<bean id="carrie" class="sia2.idol3.Singer">
+		<constructor-arg value="Carrie Underwood" />
+		<property name="song" value="Jesus Take the Wheel" />
+	</bean>
+
+	<!-- 评委，并配置为切面 -->
+	<bean id="paula" class="sia2.idol3.NiceJudge" />
+	<aop:config>
+		<aop:aspect ref="paula">
+			<aop:before pointcut="execution(* *.perform(..))"
+				method="greetPerformer" />
+			<aop:after-returning
+				pointcut="execution(* *.perform(..))" method="saySomethingNice" />
+			<aop:after-throwing
+				pointcut="execution(* *.perform(..))"
+				method="saySomethingNiceAnyway" />
+		</aop:aspect>
+	</aop:config>
+  
+	<!-- 评论池 -->
+	<bean id="criticismEngine" class="sia2.idol3.CriticismEngineImpl">
+		<property name="criticismPool">
+			<list>
+				<value>I'm not being rude, but that was appalling.</value>
+				<value>You may be the least talented person in this show.</value>
+				<value>Do everyone a favor and keep your day job.</value>
+			</list>
+		</property>
+	</bean>
+	<!--  
+	  使用 AspectJ的aspectOf方法，返回Aspect实例。Spring不创建JudgeAspect-->
+	<bean class="sia2.idol3.JudgeAspect" factory-method="aspectOf">
+    	<property name="criticismEngine" ref="criticismEngine" />
+	</bean>
+  
+
+</beans>

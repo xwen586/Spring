@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd">
+
+	<!-- Web服务实现类,就是要发布成web服务的pojo,标注了@WebService注解  -->
+	<bean id="helloSvc" class="server.HelloJSR181WSImpl" />
+	
+	<!-- 引入XFire预配置信息 -->
+	<import resource="classpath:org/codehaus/xfire/spring/xfire.xml"/>
+	
+	<!-- 获得applicationContext中所有bean的JSR181 annotation -->
+	<!-- 该Bean获取Spring容器中所有标注@WebService的Bean -->
+	<bean id="webAnnotations" class="org.codehaus.xfire.annotations.jsr181.Jsr181WebAnnotations" />
+	
+	<!-- Uses a Jsr181HandlerMapping to map services based on JSR-181 annotations.
+	  对标注@WebService的Bean进行处理，完成导出工作 -->
+	<bean id="annotationHandlerMapping"
+      class="org.codehaus.xfire.spring.remoting.Jsr181HandlerMapping">
+		<property name="xfire" ref="xfire" />
+		<property name="webAnnotations" ref="webAnnotations">
+			<!-- 获取Spring容器中所有标注@WebService的Bean -->
+		    <!-- bean class="org.codehaus.xfire.annotations.jsr181.Jsr181WebAnnotations"/ -->
+		</property>
+	</bean>
+	
+</beans>

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd">
+
+	<!-- 定义接口实现类 --> 
+    <bean id="helloService" class="server.HelloService" scope="prototype"/> 
+   
+	<!-- 定义服务端接口 -->
+    <bean class="org.springframework.remoting.rmi.RmiServiceExporter">
+        <!-- 将远程接口实现类对象设置到RMI服务中 -->
+        <property name="service" ref="helloService" />
+        <!-- 设置RMI服务名，将作为RMI客户端的调用接口-->
+        <property name="serviceName" value="helloWord" />
+        <!-- 将远程接口设置为RMI服务接口 -->
+        <property name="serviceInterface" value="server.IRmiService" />
+        <!-- 为RMI服务端远程对象注册表设置端口号-->
+        <property name="registryPort" value="9090" />
+    </bean>
+
+	<bean id="realTimeService" class="server.RealTimeService" scope="prototype"/>
+    <bean class="org.springframework.remoting.rmi.RmiServiceExporter">
+        <property name="service" ref="realTimeService" />
+        <property name="serviceName" value="realTime" />
+        <property name="serviceInterface" value="server.IRmiService" />
+        <property name="registryPort" value="9090" />
+    </bean>
+    
+</beans>
