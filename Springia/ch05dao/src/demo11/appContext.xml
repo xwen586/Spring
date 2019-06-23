@@ -39,7 +39,19 @@
 	    <property name="sessionFactory" ref="sessionFactory" />
 	</bean>
 	
+	<!-- 基于Hibernate的DAO模板类 -->
 	<bean id="customerDaoHibTmpl" class="demo11.CustomerDaoHibTmpl">
     	<property name="hibernateTmpl" ref="hibernateTemplate"/>
     </bean>
+    
+	<!-- 基于Hibernate的DAO支持类 -->
+	<bean id="customerDaoHibSupp" class="demo11.CustomerDaoHibSupp">
+    	<property name="sessionFactory" ref="sessionFactory"/>
+    </bean>
+    
+    <!-- 使用Hibernate3上下文会话操作 , 不使用spring侵入-->
+	<bean id="customerDaoHibCont" class="demo11.CustomerDaoHibCont">
+    	<property name="sessionFactory" ref="sessionFactory"/>
+    </bean>
+    
 </beans>
